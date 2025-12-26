@@ -184,7 +184,10 @@
             phone: "13724935026",
             systems: ["中国体系 / Chinese System (中考/高考)"],
             subjects: ["物理/化学/生物 (Sciences)", "计算机/编程 (CS/Coding)", "数学 (Mathematics)"],
-            experience: "一个暑假的家教经验，经试课与6位学生达成约定，后因学生之间时间冲突只辅导了3位学生（也因本人只有20天左右的空余时间）进步都十分显著。",
+            // 初始界面简短展示
+            shortExperience: "一个暑假的家教经验，经试课与6位学生达成约定，后因学生之间时间冲突只辅导了3位学生（也因本人只有20天左右的空余时间）进步都十分显著。",
+            // 点击后的完整展示
+            experience: "一个暑假的家教经验，经试课与6位学生达成约定，后因学生之间时间冲突只辅导了3位学生（也因本人只有20天左右的空余时间），分别为：\n1. 初二升初三 化学 8天\n2. 初二升初三 化学 8天 本来与家长计划教信息学，后因学生不情愿作罢\n3. 初二升初三 化学数学 14天\n另外4位分别为：\n4. 初一升初二 数学\n5. 初三升高一 数学\n6. 初三升高一 数学\n\n暂无升学成果，学术成果上2号学生（季华）参与化学竞赛，并在佛一一场选拔考试中获得前20，化学单科在年级中前50；3号学生（南外）化学单科前100，数学从重点班200人垫底进步到前100",
             personality: ["严谨逻辑型 / Rigorous & Logical", "富有耐心 / Patient & Persistent", "共情支持型 / Empathetic & Supportive"],
             hobbies: ["运动竞技 / Sports", "艺术审美 / Arts", "科技逻辑 / STEM", "人文思辨 / Humanities"],
             awards: "南商卓越人才奖学金\n港科广杰出奖学金",
@@ -214,7 +217,10 @@
             phone: "18328287293",
             systems: ["中国体系 / Chinese System (中考/高考)"],
             subjects: ["数学 (Mathematics)", "物理/化学/生物 (Sciences)", "计算机/编程 (CS/Coding)"],
-            experience: "通过传授数学做题的根本逻辑和提炼题型核心思想模型帮助许多有基础的公式运用能力，但面对中上难度题目时无从下的同学在面对难题时能整合思路。",
+            // 初始界面简短展示
+            shortExperience: "通过传授数学做题的根本逻辑和提炼题型核心思想模型帮助许多有基础的公式运用能力，但面对中上难度题目时无从下手的同学在面对难题时能整合思路。",
+            // 点击后的完整展示
+            experience: "1. 2025年1月-2月，线上辅导同校学弟小王高三数学，同学有基础的公式运用能力，但面对中上难度题目时无从下手，做题全凭感觉，通过传授数学做题的根本逻辑和提炼题型核心思想模型帮助同学在面对难题时能整合思路。学生情况：110左右 提分至 130左右。\n\n2. 2024年7月-8月，线下辅导同校学妹小黄高三数学，主要针对特定的板块，同学对考试频次较低的有难度的板块掌握尤其不熟练，例如立体几何的外接球等模型。通过针对性的练习与总结归纳绝大多数可能考到的情况，帮助同学基本能解决高考范围内的该部分题目。\n\n3. 2024年7月-8月，辅导马同学初二物理：学生基础较差，基本学习习惯养成欠佳，我在每次教学时都准备对应章节的知识清单和题集，题集难度覆盖面广，尤其帮助学生掌握理解概念与其运用，以及培养做笔记与做计划等习惯。",
             personality: ["富有耐心 / Patient & Persistent", "启发探究型 / Inquiry-based & Inspiring"],
             hobbies: ["运动竞技 / Sports", "科技逻辑 / STEM"],
             awards: "中考数学148，高考数学147，初中信息竞赛二等奖，港科广八万奖学金",
@@ -307,10 +313,7 @@
                                             </span>
                                         ))}
                                     </div>
-                                    <div className={`flex items-center gap-2 ${mentor.textColor} font-medium`}>
-                                        <Icons.Phone />
-                                        <span>{mentor.phone}</span>
-                                    </div>
+                                    {/* 联系方式已移除 (No contact info displayed) */}
                                 </div>
                             </div>
                             <div className="space-y-6">
@@ -372,7 +375,9 @@
         };
 
         const MentorCard = ({ mentor, onSelect }) => {
-            const showExperience = hasContent(mentor.experience);
+            // 优先使用简短描述 (shortExperience)，如果没有则使用完整描述
+            const experienceText = mentor.shortExperience || mentor.experience;
+            const showExperience = hasContent(experienceText);
             const showAwards = hasContent(mentor.awards);
 
             return (
@@ -406,14 +411,14 @@
                         </div>
                     </div>
                     
-                    {/* 核心内容区：优先显示经验，若经验为"无"显示奖项，若都为"无"显示兜底文案 */}
+                    {/* 核心内容区 */}
                     <div className="px-6 py-4 flex-grow space-y-4">
                         {showExperience ? (
                             <div className="text-sm text-gray-600">
                                  <div className="flex items-center gap-2 mb-1 font-semibold text-gray-700">
                                     <Icons.Book /> 资历与经验
                                 </div>
-                                <p className="line-clamp-3 leading-relaxed">{mentor.experience}</p>
+                                <p className="line-clamp-3 leading-relaxed">{experienceText}</p>
                             </div>
                         ) : showAwards ? (
                             <div className="text-sm text-gray-600">
