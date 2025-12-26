@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKUST(GZ) Mentorship Profiles</title>
+    
+    <!-- 1. 国内 Staticfile CDN: Tailwind CSS (v2稳定版) -->
+    <link href="https://cdn.staticfile.net/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    
+    <!-- 2. 国内 Staticfile CDN: React & ReactDOM -->
+    <script src="https://cdn.staticfile.net/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.staticfile.net/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    
+    <!-- 3. 国内 Staticfile CDN: Babel -->
+    <script src="https://cdn.staticfile.net/babel-standalone/7.23.5/babel.min.js"></script>
+
+    <!-- 自定义样式与颜色配置 -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+        
+        .card-shadow:hover { 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+        }
+
+        /* 动画类 */
+        .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 颜色补丁库 --- */
+        .bg-ustRed { background-color: #CF0024; }
+        .text-ustRed { color: #CF0024; }
+        .border-ustRed { border-color: #CF0024; }
+        .hover\:bg-ustRed:hover { background-color: #CF0024; }
+        
+        .bg-ustGold { background-color: #BFA868; }
+        .text-ustGold { color: #BFA868; }
+        .border-ustGold { border-color: #BFA868; }
+        .hover\:bg-ustGold:hover { background-color: #BFA868; }
+        
+        .bg-ustDark { background-color: #20284D; }
+        .text-ustDark { color: #20284D; }
+
+        /* 补充颜色 */
+        .bg-amber-500 { background-color: #f59e0b; } .text-amber-500 { color: #f59e0b; } .border-amber-500 { border-color: #f59e0b; } .hover\:bg-amber-500:hover { background-color: #f59e0b; }
+        .bg-emerald-500 { background-color: #10b981; } .text-emerald-500 { color: #10b981; } .border-emerald-500 { border-color: #10b981; } .hover\:bg-emerald-500:hover { background-color: #10b981; }
+        .bg-rose-500 { background-color: #f43f5e; } .text-rose-500 { color: #f43f5e; } .border-rose-500 { border-color: #f43f5e; } .hover\:bg-rose-500:hover { background-color: #f43f5e; }
+        .bg-violet-500 { background-color: #8b5cf6; } .text-violet-500 { color: #8b5cf6; } .border-violet-500 { border-color: #8b5cf6; } .hover\:bg-violet-500:hover { background-color: #8b5cf6; }
+        .bg-fuchsia-500 { background-color: #d946ef; } .text-fuchsia-500 { color: #d946ef; } .border-fuchsia-500 { border-color: #d946ef; } .hover\:bg-fuchsia-500:hover { background-color: #d946ef; }
+        .bg-sky-500 { background-color: #0ea5e9; } .text-sky-500 { color: #0ea5e9; } .border-sky-500 { border-color: #0ea5e9; } .hover\:bg-sky-500:hover { background-color: #0ea5e9; }
+        .bg-lime-500 { background-color: #84cc16; } .text-lime-500 { color: #84cc16; } .border-lime-500 { border-color: #84cc16; } .hover\:bg-lime-500:hover { background-color: #84cc16; }
+        .bg-orange-500 { background-color: #f97316; } .text-orange-500 { color: #f97316; } .border-orange-500 { border-color: #f97316; } .hover\:bg-orange-500:hover { background-color: #f97316; }
+        .bg-cyan-500 { background-color: #06b6d4; } .text-cyan-500 { color: #06b6d4; } .border-cyan-500 { border-color: #06b6d4; } .hover\:bg-cyan-500:hover { background-color: #06b6d4; }
+        .bg-indigo-500 { background-color: #6366f1; } .text-indigo-500 { color: #6366f1; } .border-indigo-500 { border-color: #6366f1; } .hover\:bg-indigo-500:hover { background-color: #6366f1; }
+        .bg-teal-500 { background-color: #14b8a6; } .text-teal-500 { color: #14b8a6; } .border-teal-500 { border-color: #14b8a6; } .hover\:bg-teal-500:hover { background-color: #14b8a6; }
+
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // --- 辅助函数：检查内容是否有效 (非空且不是"无") ---
+        const hasContent = (text) => {
+            return text && text.trim() !== "" && text.trim() !== "无";
+        };
+
+        // --- 完整导师数据 (共13位导师) ---
+        const mentorsData = [
+          {
+            id: 1,
+            name: "何青春",
+            phone: "18080509541",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)", "物理/化学/生物 (Sciences)", "英语听力（English Listening）", "英语学术写作/文学 (English/Literature)"],
+            experience: "曾任高考高三一轮复习一对一辅导老师，进行数学科目的系统复习和专项练习。学生（文科生）高考过一本线",
+            personality: ["严谨逻辑型 / Rigorous & Logical", "启发探究型 / Inquiry-based & Inspiring", "富有耐心 / Patient & Persistent"],
+            hobbies: ["运动竞技 / Sports", "科技逻辑 / STEM", "艺术审美 / Arts", "Games"],
+            awards: "巴中棠湖外语实验学校初中特等奖全奖；全国奥林匹克数学竞赛四川省级二等奖",
+            avatarColor: "bg-ustRed",
+            textColor: "text-ustRed",
+            borderColor: "border-ustRed",
+            hoverBg: "hover:bg-ustRed"
+          },
+          {
+            id: 2,
+            name: "何俊邑",
+            phone: "18567667508",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)"],
+            experience: "无",
+            personality: ["启发探究型 / Inquiry-based & Inspiring", "严谨逻辑型 / Rigorous & Logical", "目标驱动型 / Result-oriented"],
+            hobbies: ["运动竞技 / Sports", "艺术审美 / Arts", "科技逻辑 / STEM", "人文思辨 / Humanities", "Games"],
+            awards: "无",
+            avatarColor: "bg-amber-500",
+            textColor: "text-amber-500",
+            borderColor: "border-amber-500",
+            hoverBg: "hover:bg-amber-500"
+          },
+          {
+            id: 3,
+            name: "Haardhik M. Arani",
+            phone: "15817001350",
+            systems: ["IB (PYP/MYP/DP)"],
+            subjects: ["英语学术写作/文学 (English/Literature)", "英语听力（English Listening）", "标化考试 (IELTS/TOEFL/SAT)", "物理/化学/生物 (Sciences)"],
+            experience: "6 months teaching Middle School English",
+            personality: ["启发探究型 / Inquiry-based & Inspiring", "共情支持型 / Empathetic & Supportive", "富有耐心 / Patient & Persistent"],
+            hobbies: ["人文思辨 / Humanities", "科技逻辑 / STEM", "Reading Novels"],
+            awards: "TOEFL - 103",
+            avatarColor: "bg-emerald-500",
+            textColor: "text-emerald-500",
+            borderColor: "border-emerald-500",
+            hoverBg: "hover:bg-emerald-500"
+          },
+          {
+            id: 4,
+            name: "贾智翔",
+            phone: "17338664625",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)"],
+            experience: "无",
+            personality: ["共情支持型 / Empathetic & Supportive", "启发探究型 / Inquiry-based & Inspiring", "富有耐心 / Patient & Persistent"],
+            hobbies: ["运动竞技 / Sports", "人文思辨 / Humanities", "Games"],
+            awards: "无",
+            avatarColor: "bg-indigo-500",
+            textColor: "text-indigo-500",
+            borderColor: "border-indigo-500",
+            hoverBg: "hover:bg-indigo-500"
+          },
+          {
+            id: 5,
+            name: "王奕嘉",
+            phone: "17316588311",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)"],
+            experience: "曾辅导过初三及高一学生，关于数学的中考和初高衔接内容",
+            personality: ["富有耐心 / Patient & Persistent", "启发探究型 / Inquiry-based & Inspiring", "严谨逻辑型 / Rigorous & Logical"],
+            hobbies: ["艺术审美 / Arts", "人文思辨 / Humanities", "Games"],
+            awards: "高一物理区级竞赛二等奖",
+            avatarColor: "bg-rose-500",
+            textColor: "text-rose-500",
+            borderColor: "border-rose-500",
+            hoverBg: "hover:bg-rose-500"
+          },
+          {
+            id: 6,
+            name: "苏佳音",
+            phone: "19866805041",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)", "物理/化学/生物 (Sciences)", "英语学术写作/文学 (English/Literature)"],
+            experience: "没有正式辅导过学生，一般是亲朋好友家的孩子。\n中考屏蔽（在广东肇庆）\n高考分664，省排1511（广东省）",
+            personality: ["富有耐心 / Patient & Persistent", "共情支持型 / Empathetic & Supportive", "启发探究型 / Inquiry-based & Inspiring"],
+            hobbies: ["运动竞技 / Sports", "艺术审美 / Arts", "人文思辨 / Humanities", "科技逻辑 / STEM"],
+            awards: "第三十九、四十届全国中学生物理竞赛省级赛区三等奖\n2021年全国中学生生物学联赛肇庆市预选赛二等奖\n2022－2023学年度“肇庆市优秀学生”\n2023年肇庆市中学生化学竞赛一等奖",
+            avatarColor: "bg-violet-500",
+            textColor: "text-violet-500",
+            borderColor: "border-violet-500",
+            hoverBg: "hover:bg-violet-500"
+          },
+          {
+            id: 7,
+            name: "王言天",
+            phone: "13837250053",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["物理/化学/生物 (Sciences)"],
+            experience: "迄今为止有多段（约5段）高中物理化学家教经验，从高一到准高三均有涉及。此外，现在在民心学校初中部辅导晚自习。",
+            personality: ["严谨逻辑型 / Rigorous & Logical", "目标驱动型 / Result-oriented", "富有耐心 / Patient & Persistent"],
+            hobbies: ["运动竞技 / Sports", "艺术审美 / Arts", "人文思辨 / Humanities"],
+            awards: "港科广入学奖学金",
+            avatarColor: "bg-teal-500",
+            textColor: "text-teal-500",
+            borderColor: "border-teal-500",
+            hoverBg: "hover:bg-teal-500"
+          },
+          {
+            id: 8,
+            name: "林泓劭",
+            phone: "13724935026",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["物理/化学/生物 (Sciences)", "计算机/编程 (CS/Coding)", "数学 (Mathematics)"],
+            experience: "一个暑假的家教经验，经试课与6位学生达成约定，后因学生之间时间冲突只辅导了3位学生（也因本人只有20天左右的空余时间），分别为：\n1. 初二升初三 化学 8天\n2. 初二升初三 化学 8天 本来与家长计划教信息学，后因学生不情愿作罢\n3. 初二升初三 化学数学 14天\n另外4位分别为：\n4. 初一升初二 数学\n5. 初三升高一 数学\n6. 初三升高一 数学\n\n暂无升学成果，学术成果上2号学生（季华）参与化学竞赛，并在佛一一场选拔考试中获得前20，化学单科在年级中前50；3号学生（南外）化学单科前100，数学从重点班200人垫底进步到前100",
+            personality: ["严谨逻辑型 / Rigorous & Logical", "富有耐心 / Patient & Persistent", "共情支持型 / Empathetic & Supportive"],
+            hobbies: ["运动竞技 / Sports", "艺术审美 / Arts", "科技逻辑 / STEM", "人文思辨 / Humanities"],
+            awards: "南商卓越人才奖学金\n港科广杰出奖学金",
+            avatarColor: "bg-fuchsia-500",
+            textColor: "text-fuchsia-500",
+            borderColor: "border-fuchsia-500",
+            hoverBg: "hover:bg-fuchsia-500"
+          },
+          {
+            id: 9,
+            name: "刘秋悦",
+            phone: "18483641781",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)", "物理/化学/生物 (Sciences)", "计算机/编程 (CS/Coding)"],
+            experience: "无",
+            personality: ["启发探究型 / Inquiry-based & Inspiring", "富有耐心 / Patient & Persistent", "目标驱动型 / Result-oriented"],
+            hobbies: ["艺术审美 / Arts", "科技逻辑 / STEM", "Games"],
+            awards: "2025ICPC西安铜奖，2025CCPC女生赛铜奖，首届程序设计校赛银奖，第十六届蓝桥杯省赛二等奖，NOIP2022三等奖，CSP-S2022二等奖",
+            avatarColor: "bg-sky-500",
+            textColor: "text-sky-500",
+            borderColor: "border-sky-500",
+            hoverBg: "hover:bg-sky-500"
+          },
+          {
+            id: 10,
+            name: "胡海涛",
+            phone: "18328287293",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["数学 (Mathematics)", "物理/化学/生物 (Sciences)", "计算机/编程 (CS/Coding)"],
+            experience: "1. 2025年1月-2月，线上辅导同校学弟小王高三数学，同学有基础的公式运用能力，但面对中上难度题目时无从下手，做题全凭感觉，通过传授数学做题的根本逻辑和提炼题型核心思想模型帮助同学在面对难题时能整合思路。学生情况：110左右 提分至 130左右。\n\n2. 2024年7月-8月，线下辅导同校学妹小黄高三数学，主要针对特定的板块，同学对考试频次较低的有难度的板块掌握尤其不熟练，例如立体几何的外接球等模型。通过针对性的练习与总结归纳绝大多数可能考到的情况，帮助同学基本能解决高考范围内的该部分题目。\n\n3. 2024年7月-8月，辅导马同学初二物理：学生基础较差，基本学习习惯养成欠佳，我在每次教学时都准备对应章节的知识清单和题集，题集难度覆盖面广，尤其帮助学生掌握理解概念与其运用，以及培养做笔记与做计划等习惯。",
+            personality: ["富有耐心 / Patient & Persistent", "启发探究型 / Inquiry-based & Inspiring"],
+            hobbies: ["运动竞技 / Sports", "科技逻辑 / STEM"],
+            awards: "中考数学148，高考数学147，初中信息竞赛二等奖，港科广八万奖学金",
+            avatarColor: "bg-lime-500",
+            textColor: "text-lime-500",
+            borderColor: "border-lime-500",
+            hoverBg: "hover:bg-lime-500"
+          },
+          {
+            id: 11,
+            name: "YUU JING XIN",
+            phone: "19864768665",
+            systems: ["其他 / Others (e.g.OSSD)"],
+            subjects: ["英语听力（English Listening）", "物理/化学/生物 (Sciences)"],
+            experience: "Got full A's in Malaysia's national exam and got admitted to governmental funded foundation which acceptance rate for Chinese students is 5 students every 100 students and passed the interview in HKUST(GZ) and awarded with full scholarship",
+            personality: ["共情支持型 / Empathetic & Supportive", "富有耐心 / Patient & Persistent", "启发探究型 / Inquiry-based & Inspiring"],
+            hobbies: ["运动竞技 / Sports", "人文思辨 / Humanities"],
+            awards: "Full scholarship in HKUST(GZ), Malaysian University English Test band 4.5",
+            avatarColor: "bg-orange-500",
+            textColor: "text-orange-500",
+            borderColor: "border-orange-500",
+            hoverBg: "hover:bg-orange-500"
+          },
+          {
+            id: 12,
+            name: "陈铭敏",
+            phone: "13431063415",
+            systems: ["中国体系 / Chinese System (中考/高考)"],
+            subjects: ["英语听力（English Listening）", "数学 (Mathematics)", "物理/化学/生物 (Sciences)", "英语学术写作/文学 (English/Literature)"],
+            experience: "假期补习班助教\n辅导弟弟妹妹作业",
+            personality: ["严谨逻辑型 / Rigorous & Logical", "启发探究型 / Inquiry-based & Inspiring", "富有耐心 / Patient & Persistent"],
+            hobbies: ["艺术审美 / Arts", "人文思辨 / Humanities", "Games"],
+            awards: "港科广入学奖学金\n广东省生物竞赛初赛二等\n第十七届创新作文大赛广东省二等奖",
+            avatarColor: "bg-cyan-500",
+            textColor: "text-cyan-500",
+            borderColor: "border-cyan-500",
+            hoverBg: "hover:bg-cyan-500"
+          },
+          {
+            id: 13,
+            name: "黄品睿",
+            phone: "19875184072",
+            systems: ["中国体系 / Chinese System (中考/高考)", "英国体系 / British System (A-Level/IGCSE)", "其他 / Others (e.g.OSSD)"],
+            subjects: ["数学 (Mathematics)", "竞赛指导 (AMC/Physics Bowl等)", "物理/化学/生物 (Sciences)"],
+            experience: "有数学和物理竞赛背景，AMC12,AMC10均有晋级，获奖。有几个月的家教辅导经验",
+            personality: ["共情支持型 / Empathetic & Supportive", "目标驱动型 / Result-oriented", "富有耐心 / Patient & Persistent"],
+            hobbies: ["运动竞技 / Sports", "艺术审美 / Arts", "科技逻辑 / STEM"],
+            awards: "香港科技大学广州奖学金40万（高考）\n2023年全国中学生数学奥林匹克竞赛广东赛区二等奖\n2022年美国数学思维活动AMC10级比赛CERTIFICATE OF DISTINCTION\n2024年美国数学思维活动AMC12级比赛优秀奖\n2022年高中数学建模（应用）能力展示活动二等奖\n第19届外研社杯全国中学生外语素养大赛广东省特等奖，全国二等奖",
+            avatarColor: "bg-ustGold",
+            textColor: "text-ustGold",
+            borderColor: "border-ustGold",
+            hoverBg: "hover:bg-ustGold"
+          }
+        ];
+
+        // 图标组件
+        const Icons = {
+            Book: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
+            Award: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>,
+            User: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            Search: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+            X: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>,
+            Phone: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>,
+            Smile: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>,
+            Heart: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        };
+
+        // Modal Component
+        const MentorModal = ({ mentor, onClose }) => {
+            if (!mentor) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative z-10 animate-fade-in-up">
+                        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors z-20">
+                            <Icons.X />
+                        </button>
+                        <div className="p-8">
+                            <div className="flex flex-col md:flex-row gap-6 items-start border-b border-gray-100 pb-6 mb-6">
+                                <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full ${mentor.avatarColor} flex items-center justify-center text-white font-bold text-3xl md:text-4xl shadow-md shrink-0`}>
+                                    {mentor.name[0]}
+                                </div>
+                                <div className="flex-grow w-full">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{mentor.name}</h2>
+                                    <div className="flex flex-wrap gap-2 mb-3">
+                                        {mentor.systems.map((sys, idx) => (
+                                            <span key={idx} className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-sm font-medium">
+                                                {sys.split(' / ')[0]}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className={`flex items-center gap-2 ${mentor.textColor} font-medium`}>
+                                        <Icons.Phone />
+                                        <span>{mentor.phone}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="space-y-6">
+                                {/* 核心教学科目 */}
+                                <div>
+                                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">核心教学科目</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {mentor.subjects.map((sub, idx) => (
+                                            <span key={idx} className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium border ${mentor.borderColor} ${mentor.textColor} bg-opacity-10 bg-white`}>
+                                                {sub}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* 智能展示：只有内容不为"无"时才显示 */}
+                                {hasContent(mentor.experience) && (
+                                    <div className="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                                        <h3 className="flex items-center gap-2 text-lg font-bold text-gray-800 mb-3"><Icons.Book /> 资历与经验</h3>
+                                        <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{mentor.experience}</p>
+                                    </div>
+                                )}
+
+                                {hasContent(mentor.awards) && (
+                                    <div>
+                                        <h3 className="flex items-center gap-2 text-lg font-bold text-gray-800 mb-3"><Icons.Award /> 奖项 & 荣誉</h3>
+                                        <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                                            <p className="text-gray-600 leading-relaxed whitespace-pre-wrap text-sm">{mentor.awards}</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 className="flex items-center gap-2 text-lg font-bold text-gray-800 mb-3"><Icons.Smile /> 性格特征</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {mentor.personality.map((trait, i) => (
+                                                <span key={i} className="bg-white border border-gray-200 text-gray-600 px-3 py-1 rounded-md text-sm shadow-sm">{trait.split(' / ')[0]}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 className="flex items-center gap-2 text-lg font-bold text-gray-800 mb-3"><Icons.Heart /> 兴趣爱好</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {mentor.hobbies.map((hobby, i) => (
+                                                <span key={i} className="bg-blue-50 text-blue-600 px-3 py-1 rounded-md text-sm font-medium">{hobby.split(':')[0]}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-gray-50 p-6 border-t border-gray-100 text-center rounded-b-2xl">
+                            <button onClick={onClose} className={`px-8 py-3 ${mentor.avatarColor} ${mentor.hoverBg} text-white font-bold rounded-xl shadow-lg transition-transform hover:-translate-y-0.5`}>关闭档案</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MentorCard = ({ mentor, onSelect }) => {
+            const showExperience = hasContent(mentor.experience);
+            const showAwards = hasContent(mentor.awards);
+
+            return (
+                <div className="bg-white rounded-xl overflow-hidden border border-gray-100 transition-all duration-300 card-shadow flex flex-col h-full hover:border-gray-200">
+                    <div className="relative p-6 pb-4">
+                        <div className={`absolute top-0 left-0 w-full h-2 ${mentor.avatarColor}`}></div>
+                        <div className="flex justify-between items-start mt-2">
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900">{mentor.name}</h3>
+                                <p className="text-sm text-gray-500 mt-1 flex flex-wrap gap-1">
+                                    {mentor.systems.map((sys, idx) => (
+                                        <span key={idx} className="bg-gray-100 px-2 py-0.5 rounded text-xs">{sys.split('/')[0]}</span>
+                                    ))}
+                                </p>
+                            </div>
+                            <div className={`w-10 h-10 rounded-full ${mentor.avatarColor} flex items-center justify-center text-white font-bold text-lg shadow-sm shrink-0`}>
+                                {mentor.name[0]}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="px-6 pb-2">
+                        <div className="flex flex-wrap gap-2">
+                            {mentor.subjects.slice(0, 3).map((sub, idx) => (
+                                <span key={idx} className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${mentor.borderColor} ${mentor.textColor} bg-opacity-10 bg-white`}>
+                                    {sub.split(' (')[0]}
+                                </span>
+                            ))}
+                            {mentor.subjects.length > 3 && (
+                                <span className="text-xs text-gray-400 py-0.5">+{mentor.subjects.length - 3}</span>
+                            )}
+                        </div>
+                    </div>
+                    
+                    {/* 核心内容区：优先显示经验，若经验为"无"显示奖项，若都为"无"显示兜底文案 */}
+                    <div className="px-6 py-4 flex-grow space-y-4">
+                        {showExperience ? (
+                            <div className="text-sm text-gray-600">
+                                 <div className="flex items-center gap-2 mb-1 font-semibold text-gray-700">
+                                    <Icons.Book /> 资历与经验
+                                </div>
+                                <p className="line-clamp-3 leading-relaxed">{mentor.experience}</p>
+                            </div>
+                        ) : showAwards ? (
+                            <div className="text-sm text-gray-600">
+                                 <div className="flex items-center gap-2 mb-1 font-semibold text-gray-700">
+                                    <Icons.Award /> 奖项 & 荣誉
+                                </div>
+                                <p className="line-clamp-3 leading-relaxed">{mentor.awards}</p>
+                            </div>
+                        ) : (
+                            <div className="text-sm text-gray-400 italic py-2">
+                                暂无详细描述，请查看详细档案了解更多性格与兴趣。
+                            </div>
+                        )}
+                    </div>
+                    
+                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 mt-auto">
+                        <button onClick={() => onSelect(mentor)} className={`w-full py-2 text-sm font-medium ${mentor.textColor} border ${mentor.borderColor} rounded-lg ${mentor.hoverBg} hover:text-white transition-colors`}>查看详细档案</button>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [searchTerm, setSearchTerm] = useState("");
+            const [selectedMentor, setSelectedMentor] = useState(null);
+            
+            const filteredMentors = useMemo(() => {
+                const term = searchTerm.toLowerCase();
+                return mentorsData.filter(m => 
+                    m.name.toLowerCase().includes(term) || 
+                    m.subjects.some(s => s.toLowerCase().includes(term)) ||
+                    (m.experience && m.experience.toLowerCase().includes(term))
+                );
+            }, [searchTerm]);
+
+            return (
+                <div className="min-h-screen pb-12 relative">
+                    <header className="bg-ustDark text-white py-12 px-4 shadow-lg relative overflow-hidden">
+                        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-ustRed rounded-full opacity-20 blur-3xl"></div>
+                        <div className="max-w-6xl mx-auto relative z-10">
+                            <h1 className="text-3xl md:text-4xl font-bold mb-2 tracking-tight">HKUST(GZ) Project Mentorship</h1>
+                            <p className="text-blue-200 text-lg max-w-2xl">连接港科广与民心学校，分享知识，启迪未来。</p>
+                        </div>
+                    </header>
+                    <main className="max-w-6xl mx-auto px-4 -mt-6 relative z-20">
+                        <div className="bg-white p-4 rounded-lg shadow-md mb-8 flex items-center gap-3">
+                            <Icons.Search />
+                            <input type="text" placeholder="搜索导师姓名、科目 (如: 数学, 编程)..." className="w-full outline-none text-gray-700 placeholder-gray-400" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        </div>
+                        {filteredMentors.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {filteredMentors.map(mentor => (
+                                    <MentorCard key={mentor.id} mentor={mentor} onSelect={setSelectedMentor} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-20 text-gray-500"><p>没有找到匹配的导师，换个关键词试试？</p></div>
+                        )}
+                    </main>
+                    <footer className="text-center text-gray-400 text-sm py-8 mt-8">© 2024 HKUST(GZ) Mentorship Program. Designed for Minxin School.</footer>
+                    {selectedMentor && <MentorModal mentor={selectedMentor} onClose={() => setSelectedMentor(null)} />}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
