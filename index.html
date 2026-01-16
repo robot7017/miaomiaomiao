@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HKUST(GZ) Mentorship Profiles</title>
     
-    <!-- 1. 国内 Staticfile CDN: Tailwind CSS (v2稳定版) -->
     <link href="https://cdn.staticfile.net/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     
-    <!-- 2. 国内 Staticfile CDN: React & ReactDOM -->
     <script src="https://cdn.staticfile.net/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdn.staticfile.net/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     
-    <!-- 3. 国内 Staticfile CDN: Babel -->
     <script src="https://cdn.staticfile.net/babel-standalone/7.23.5/babel.min.js"></script>
 
-    <!-- 自定义样式与颜色配置 -->
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
         
@@ -56,6 +52,7 @@
         .bg-cyan-500 { background-color: #06b6d4; } .text-cyan-500 { color: #06b6d4; } .border-cyan-500 { border-color: #06b6d4; } .hover\:bg-cyan-500:hover { background-color: #06b6d4; }
         .bg-indigo-500 { background-color: #6366f1; } .text-indigo-500 { color: #6366f1; } .border-indigo-500 { border-color: #6366f1; } .hover\:bg-indigo-500:hover { background-color: #6366f1; }
         .bg-teal-500 { background-color: #14b8a6; } .text-teal-500 { color: #14b8a6; } .border-teal-500 { border-color: #14b8a6; } .hover\:bg-teal-500:hover { background-color: #14b8a6; }
+        .bg-blue-500 { background-color: #3b82f6; } .text-blue-500 { color: #3b82f6; } .border-blue-500 { border-color: #3b82f6; } .hover\:bg-blue-500:hover { background-color: #3b82f6; }
 
         .backdrop-blur-sm { backdrop-filter: blur(4px); }
     </style>
@@ -71,7 +68,7 @@
             return text && text.trim() !== "" && text.trim() !== "无";
         };
 
-        // --- 完整导师数据 (共13位导师) ---
+        // --- 完整导师数据 (共14位导师) ---
         const mentorsData = [
           {
             id: 1,
@@ -273,11 +270,11 @@
             textColor: "text-ustGold",
             borderColor: "border-ustGold",
             hoverBg: "hover:bg-ustGold"
-          }
+          }, // <--- 修复点：这里原来少了一个逗号
           {
             id: 14,
             name: "赖家兴",
-            phone: "13800138000", // 占位手机号，可替换为真实号码
+            phone: "13800138000",
             systems: ["中国体系 / Chinese System (中考/高考)"],
             subjects: ["数学 (Mathematics)"],
             experience: "高考体系（江西赣州），高考省排名661名，数学单科131分；具备高一数学家教经验；非常认真负责，会监督学生背诵知识点，会带着同学们一起运动（羽毛球、乒乓球）；性格非常乐观，善于和老师沟通相处，高考备考经验充足；科目均有扎实的知识储备。",
@@ -289,7 +286,7 @@
             borderColor: "border-blue-500",
             hoverBg: "hover:bg-blue-500"
           }
-     ];
+        ];
 
         // 图标组件
         const Icons = {
